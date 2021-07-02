@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
+  
+        <h1 class="pt-5 pb-2">Welcome to a simple app for people who love bad jokes.</p>
+  
+        <p class="lead">Here you can submit a joke (bonus points if it's a pun or a dad joke!) and see it displayed in our collection.</p>
+        <form method="POST">
+          
+            {{ form.csrf_token }}
+
+          <p>
+            {{ form.name.label }}
+          </p>
+          <p>
+            {{ form.name(size=10) }}
+          </p>
+          <p>
+            {{ form.joke.label }}{{ form.joke(size=40) }}
+          </p>
+          <input type="submit" value="Submit">
+        </form>
+        
+        
+        <p class="pt-5"><strong>{{ message }}</strong></p>
+          
+      </div>
+    </div>
+  </div>
+{% endblock %}

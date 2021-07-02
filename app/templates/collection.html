@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+<!-- 
+LOGIC:
+- i want to display in rows of 4 
+- n = 0 
+- while n<= len(jokes +4): 
+    - for i in range n - n+4
+        - row (i.joke) etc etc 
+    N += 4  -->
+
+{% block content %}  
+    <div class="container" ></div>
+    {% for i in range(0, 40, 4) %}
+
+        <div class="card-group">
+            {% for j in jokes[i:i+4] %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                <h5 class="card-title">{{ j.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ j.date }}</h6>
+                <p class="card-text">{{ j.joke }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
+
