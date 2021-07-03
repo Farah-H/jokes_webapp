@@ -44,22 +44,41 @@ resource "aws_security_group" "db_sg" {
     name = "jokes_db_sg"
     description = "SG for db instances"
     vpc_id = var.vpc_id
+    
     tags = {
         Name = "jokes_db_sg"
     }
 
     ingress {
-        description = "Allow SSH from app instance" #increment: SSH only from bastion
+        description = "Allow SSH from app instance" 
         from_port = 22
         to_port = 22
         protocol = "tcp"
         
-        security_groups = [aws_security_group.app_sg.id]
+        #security_groups = [aws_security_group.app_sg.id]
         
         #sometimes public IPs change in AWS, defining the app servers using their security group avoids issues caused by public ip changes
         #If I assign app SG to another instance, technically I can SSH into the app which is a security risk
-        #Alternatively, can use the private ip of the app instance, which will not change
+        #Alternatively,i can use the private ip of the app instance, which will not change
         #most corpos pay for AWS, so they have static IPs
 
+        cidr_blocks = ["${aws_instance.app_instance.app_private_ip}/24"]
+    }
+
+    ingress {
+        description = "Allow SSH from Admin" # Needed for provisioning MongoDB credentials. Increment : only from Bastion IP
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["${var.my_ip}/32"]        
+    }
+
+
+    ingress {
+        description = "Allow MongoDB acces"
+        from_port = 27017
+        to_port = 27017
+        protocol = "tcp"
+        cidr_blocks = ["${aws_instance.app_instance.app_private_ip}/24"]
     }
 }
