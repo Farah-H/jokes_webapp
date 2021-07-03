@@ -21,7 +21,7 @@ variable "webserver_ami" {
     default = "[webserver ami here]"
 }
 
-# these two should be hidden from the repo, using vault or global vars 
+# these two should be hidden using aws vault or global vars 
 variable "ssh_key" {
 
     default = "[keyname here]"
