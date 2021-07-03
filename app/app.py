@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired
 # configure app
 application = Flask(__name__)
 application.config["MONGO_URI"] = f"mongodb://{os.environ['MONGODB_USERNAME']}:{os.environ['MONGODB_PASSWORD']}@{os.environ['MONGODB_HOSTNAME']}:27017/{os.environ['MONGODB_DATABASE']}"
-application.config['SECRET_KEY'] = os.SECRET_KEY
+application.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
 mongo = PyMongo(application)
 db = mongo.db
@@ -41,7 +41,7 @@ def index():
         form.name.data = ""
         form.joke.data = ""
 
-        message = "Success! Please head over to the collection page to see your joke displayed live."
+        message = "Success! Please head over to the collection page to see your joke displayed."
     return render_template('index.html', form=form, message=message)
 
 @application.route("/collection")

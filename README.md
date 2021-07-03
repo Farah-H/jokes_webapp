@@ -40,11 +40,11 @@ Simple! When you first access the page (using the ip address which will be outpu
 ### Networking Structure 
 
 ## Increment 
-Currently both the front-end servers are hosted in a public subnet, I would like to move them to the private subnet and allow access only via a bastion in the public subnet, for increased security, as described [here](https://developer.ibm.com/articles/secure-vpc-access-with-a-bastion-host-and-terraform/): 
+1. Currently the front-end servers are hosted in a public subnet, I would like to move them to the private subnet and allow access only via a bastion in the public subnet, for increased security, as described [here](https://developer.ibm.com/articles/secure-vpc-access-with-a-bastion-host-and-terraform/): 
 
 ![bastion](./images/bastion.png)
 
-### Terraform Module Structure
+2. The proxy doesn't need to be an additional instance, and can probably be combined with the app-tier.
 
 ### Configuration and Security 
 - These files do not contain any of the passwords or AWS key names or locations, instead these are called from environment variables. 
