@@ -7,7 +7,7 @@ variable "instance_type" {
 }
 
 
-# AMIs created using packer and ansible (see ansible folder)
+# increment: AMIs created using packer and ansible for automated app provision
 variable "app_ami" {
     defaut = "[app ami here]"
 }

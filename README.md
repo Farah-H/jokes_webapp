@@ -4,7 +4,10 @@
 Simple! When you first access the page (using the ip address which will be outputted after you run `terraform apply`)
 - You will be met with this page:
 ![home](./images/Homepage.png)
-Insert your name and a joke. 
+- Insert your name and a joke. You should see the following success message:
+![success](./images/Success.png)
+- You can then head over to the collection to confirm that your joke has been added to the MongoDB. 
+![collection](./images/Collection.png)
 
 ### Pre-requisites 
 **This README assumes a basic understanding of docker, terraform and bash commands. After downloading the files in this repo:**
@@ -35,6 +38,10 @@ Insert your name and a joke.
     
 
 ### Networking Structure 
+## Increment 
+Currently both the front-end servers are hosted in a public subnet, I would like to move them to the private subnet and allow access only via a bastion in the public subnet, for increased security, as described [here](https://developer.ibm.com/articles/secure-vpc-access-with-a-bastion-host-and-terraform/): 
+
+![bastion]()
 
 ### Terraform Module Structure
 
