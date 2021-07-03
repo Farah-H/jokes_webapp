@@ -8,9 +8,13 @@ resource "aws_instance" "db_instance" {
 
     security_groups = [var.db_sg_id]
 
+    tags = {
+        Name = "jokes_db"
+    }
 
 
-    #connecting to provision the DB (increment: ideally only bastion would be able to ssh into db instance)
+
+    #connecting to provision the DB (increment: ideally only bastion would be able to ssh into db instance and this step would be automated anyways)
     connection {
         type = "ssh"
         user = "ubuntu"
@@ -20,7 +24,12 @@ resource "aws_instance" "db_instance" {
 
     provisioner "remote-exec" {
         inline = [
-            
+            "mongo -u '${var.mongoduser}' -p",
+            "${var.mongodpassword}",
+            "show dbs;",
+            "use flaskdb",
+            "db.createUser({user: '${var.mongoduser}', pwd: '${var.mongodpassword}', roles: [{role: 'readWrite', db: 'flaskdb'}]})",
+            "exit"
         ]
     }
 }
