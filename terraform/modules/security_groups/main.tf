@@ -84,7 +84,7 @@ resource "aws_security_group" "db_sg" {
 }
 
 
-resource "aws_security_group" "elb" {
+resource "aws_security_group" "elb_sg" {
     name = "jokes_elb_sg"
     description = "SG to allow HTTP traffic to app instances through Elastic Load Balancer"
     vpc_id = var.vpc_id
