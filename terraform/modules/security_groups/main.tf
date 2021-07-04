@@ -60,7 +60,7 @@ resource "aws_security_group" "db_sg" {
         #sometimes public IPs change in AWS, defining the app servers using their security group avoids issues caused by public ip changes
         #If I assign app SG to another instance, technically I can SSH into the app which is a security risk
         #Alternatively,i can use the private ip of the app instance, which will not change
-        #most corpos pay for AWS, so they have static IPs
+        #most corporations pay for AWS, so they have static IPs
 
         cidr_blocks = ["${aws_instance.app_instance.app_private_ip}/24"]
     }
@@ -80,5 +80,40 @@ resource "aws_security_group" "db_sg" {
         to_port = 27017
         protocol = "tcp"
         cidr_blocks = ["${aws_instance.app_instance.app_private_ip}/24"]
+    }
+}
+
+
+resource "aws_security_group" "elb" {
+    name = "jokes_elb_sg"
+    description = "SG to allow HTTP traffic to app instances through Elastic Load Balancer"
+    vpc_id = var.vpc_id
+
+    tags = {
+        Name = "jokes_elb_sg"
+    }
+
+    ingress {
+        description = "Allow HTTP"
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        description = "Allow HTTPS"
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress {
+        description = "Allow all out"
+        from_port = 0
+        to_port = 0
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
     }
 }
