@@ -39,6 +39,26 @@ Simple! When you first access the page (using the ip address which will be outpu
 
 ### Networking Structure 
 
+- VPC 
+    - region can be specified in the `terraform/variables.tf` file
+    - IGW
+
+    - Two Subnets
+        - Public Subnet
+            - Contains app instances
+            - NACL allows HTTP, HTTPS, SSH from Admin
+        - Private Subnet
+            - Contains db instances
+            - NACL allows MongoDB and SSH from Admin
+    
+    - Scaling 
+        - ELB set up for app and db instances
+        - Scaling Up and Down policies for both db and app instances for both >60% and <10% CPU usage which trigger autoscaling 
+        - Cloudwatch Alarms set up for the above
+        - Scaling across availability zones can be achieved by adding additional subnets to the list of subnets in the `terraform/scaling/main.tf` file. These subnets can be in other availability zones, but need to be created in advance. 
+
+
+
 ## Increment 
 1. Currently the front-end servers are hosted in a public subnet, I would like to move them to the private subnet and allow access only via a bastion in the public subnet, for increased security, as described [here](https://developer.ibm.com/articles/secure-vpc-access-with-a-bastion-host-and-terraform/): 
 
