@@ -81,6 +81,14 @@ resource "aws_security_group" "db_sg" {
         protocol = "tcp"
         cidr_blocks = ["${aws_instance.app_instance.app_private_ip}/24"]
     }
+    
+    egress {
+        description = "Allow all out"
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
 }
 
 
@@ -113,7 +121,7 @@ resource "aws_security_group" "elb_sg" {
         description = "Allow all out"
         from_port = 0
         to_port = 0
-        protocol = "tcp"
+        protocol = "-1"
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
