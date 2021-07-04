@@ -14,3 +14,4 @@ module "vpc" {
     my_ip = module.my_ip.address
 }
 
+# remember igw
