@@ -30,3 +30,7 @@ variable "ssh_key" {
 variable "key_path" {
     default = "[keypath here]"
 }
+
+variable "vpc_cidr" {
+    default = "160.100.100.0"
+}
