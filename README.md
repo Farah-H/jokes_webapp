@@ -50,7 +50,7 @@ Simple! When you first access the page (using the ip address which will be outpu
         - Private Subnet
             - Contains db instances
             - NACL allows MongoDB and SSH from Admin
-    
+        - route tables, route associations and security groups are all explicitly defined. 
     - Scaling 
         - ELB set up for app and db instances
         - Scaling Up and Down policies for both db and app instances for both >60% and <10% CPU usage which trigger autoscaling 
