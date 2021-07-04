@@ -10,7 +10,6 @@ output "app_asg_id" {
     value = aws_autoscaling_group.app_asg.id
 }
 
-
 output "db_asg_id" {
     value = aws_autoscaling_group.db_asg.id
 }

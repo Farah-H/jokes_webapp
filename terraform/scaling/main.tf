@@ -156,3 +156,54 @@ resource "aws_autoscaling_group" "db_asg" {
     }
 }
 
+resource "aws_autoscaling_policy" "app_scale_up" {
+    name = "app_scale_up"
+    scaling_adjustment = 1
+    adjustment_type = "ChangeInCapacity"
+    cooldown = 300
+    autoscaling_group_id = aws_autoscaling_group.app_asg.id
+}
+
+resource "aws_autoscaling_policy" "db_scale_up" {
+    name = "db_scale_up"
+    alarm_description = "Monitors CPU utilisation for app instances"
+    scaling_adjustment = 1
+    adjustment_type = "ChangeInCapacity"
+    cooldown = 300
+    autoscaling_group_id = aws_autoscaling_group.db_asg.id
+}
+
+resource "aws_cloudwatch_metric_alarm" "app_cpu_alarm_up" {
+    alarm_name = "app_cpu_alarm_up"
+    comparison_operator = "GreaterThanOrEqualToThreshhold"
+    evaluation_periods = "2"
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    period = "120"
+    statistic = "Average"
+    threshold = "60"
+
+    dimesions = {
+        AutoScalingGroupID = aws_autoscaling_group.app_asg.id
+    }
+
+    alarm_actions = [ aws_autoscaling_policy.app_scale_up.arn ]
+}
+
+resource "aws_cloudwatch_metric_alarm" "db_cpu_alarm_up" {
+    alarm_name = "db_cpu_alarm_up"
+    comparison_operator = "GreaterThanOrEqualToThreshhold"
+    evaluation_periods = "2"
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    period = "120"
+    statistic = "Average"
+    threshold = "60"
+
+    dimesions = {
+        AutoScalingGroupID = aws_autoscaling_group.db_asg.id
+    }
+
+    alarm_actions = [ aws_autoscaling_policy.db_scale_up.arn ]
+}
+
