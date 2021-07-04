@@ -207,3 +207,53 @@ resource "aws_cloudwatch_metric_alarm" "db_cpu_alarm_up" {
     alarm_actions = [ aws_autoscaling_policy.db_scale_up.arn ]
 }
 
+resource "aws_autoscaling_policy" "app_scale_down" {
+    name = "app_scale_down"
+    scaling_adjustment = -1
+    adjustment_type = "ChangeInCapacity"
+    cooldown = 300
+    autoscaling_group_id = aws_autoscaling_group.app_asg.id
+}
+
+resource "aws_autoscaling_policy" "db_scale_down" {
+    name = "db_scale_down"
+    scaling_adjustment = -1
+    adjustment_type = "ChangeInCapacity"
+    cooldown = 300
+    autoscaling_group_id = aws_autoscaling_group.db_asg.id
+}
+
+
+resource "aws_cloudwatch_metric_alarm" "app_cpu_alarm_down" {
+    alarm_name = "app_cpu_alarm_down"
+    comparison_operator = "LessThanOrEqualToThreshhold"
+    evaluation_periods = "2"
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    period = "120"
+    statistic = "Average"
+    threshold = "10"
+
+    dimesions = {
+        AutoScalingGroupID = aws_autoscaling_group.app_asg.id
+    }
+
+    alarm_actions = [ aws_autoscaling_policy.app_scale_down.arn ]
+}
+
+resource "aws_cloudwatch_metric_alarm" "db_cpu_alarm_down" {
+    alarm_name = "db_cpu_alarm_down"
+    comparison_operator = "LessThanOrEqualToThreshhold"
+    evaluation_periods = "2"
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    period = "120"
+    statistic = "Average"
+    threshold = "10"
+
+    dimesions = {
+        AutoScalingGroupID = aws_autoscaling_group.db_asg.id
+    }
+
+    alarm_actions = [ aws_autoscaling_policy.db_scale_down.arn ]
+}
