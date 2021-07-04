@@ -63,3 +63,25 @@ resource "aws_elb" "app_elb" {
     }
 }
 
+resource "aws_elb" "db_elb" {
+    name = "db_elb"
+    # need sg for db elb, allow nothing except mongodb and ssh
+    security_groups = [aws_security_group.db_elb_sg.id]
+
+    subnets = [aws_subnet.private_subnet.id]
+
+    cross_zone_load_balancing = true 
+
+    health_check {
+        healthy_threshhold = 2
+        unhealthy_threshhold = 2
+        timeout = 3
+        interval = 30
+    }
+
+    listener {
+        lb_port = [27017, 22]
+        lb_protocol = ["tcp", "ssh"]
+        instance_port = [27017, 22]
+    }
+}
