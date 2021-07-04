@@ -85,3 +85,74 @@ resource "aws_elb" "db_elb" {
         instance_port = [27017, 22]
     }
 }
+
+
+resource "aws_autoscaling_group" "app_asg" {
+    name = "${aws_launch_configuration.app_instance.name}_asg"
+
+    tags = {
+        Name = "jokes_app_autoscaling"
+        propagate_at_launch = true 
+    }
+
+    min_size = 1
+    desired_capacity = 2
+    max_size = 4
+
+    health_check_type = "ELB"
+    load_balancers = [aws_elb.app_elb.id]
+
+    launch_configuration = aws_launch_configuration.app_instance.id
+
+    enabled_metrics = [
+        "GroupMinSize",
+        "Group MaxSize",
+        "GroupDesiredCapacity",
+        "GroupInServiceInstances",
+        "GroupTotalInstances"
+    ]
+
+    metrics_granularity = "1Minute"
+
+    vpc_zone_identifier = [aws_subnet.public_subnet.id]
+
+    lifecycle {
+        create_before_destroy = true 
+    }
+}
+
+
+resource "aws_autoscaling_group" "db_asg" {
+    name = "${aws_launch_configuration.db_instance.name}_asg"
+
+    tags = {
+        Name = "jokes_db_autoscaling"
+        propagate_at_launch = true 
+    }
+
+    min_size = 1
+    desired_capacity = 2
+    max_size = 4
+
+    health_check_type = "ELB"
+    load_balancers = [aws_elb.db_elb.id]
+
+    launch_configuration = aws_launch_configuration.db_instance.id
+
+    enabled_metrics = [
+        "GroupMinSize",
+        "Group MaxSize",
+        "GroupDesiredCapacity",
+        "GroupInServiceInstances",
+        "GroupTotalInstances"
+    ]
+
+    metrics_granularity = "1Minute"
+
+    vpc_zone_identifier = [aws_subnet.private_subnet.id]
+
+    lifecycle {
+        create_before_destroy = true 
+    }
+}
+
